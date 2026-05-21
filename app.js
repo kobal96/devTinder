@@ -1,27 +1,32 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import express from "express";
+import 'dotenv/config';
+import connectDB from "./config/database.js";
+import cookieParser from "cookie-parser";
+import authrouter from "./routes/auth.js";
+import userrouter from "./routes/user.js";
+import profilerouter from "./routes/profile.js";
+import requestconnect from "./routes/request.js";
 
+// dotenv is loaded above via `import 'dotenv/config'` so env vars are available to imported modules
 const app = express();
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 app.use(express.json());
-
-dotenv.config();
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-app.use('/users', (req, res) => {
-  // Logic to handle user-related operations
-     res.send('User endpoint');
-});
+app.use(cookieParser());
 
 
-app.use('/about-us', (req, res) => {
-  // Logic to handle user-related operations
-     res.send('About Us endpoint');
-});
+app.use("/", authrouter);
+app.use("/", userrouter);
+app.use("/", profilerouter);
+app.use("/",requestconnect)
+connectDB()
+  .then(() => {
+    const PORT = process.env.PORT || 3001;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection failed:", err);
+    process.exit(1);
+  });
+
+
