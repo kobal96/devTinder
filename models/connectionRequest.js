@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const connectionRequestSchema = new mongoose.Schema({
     senderUserId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -18,7 +17,5 @@ const connectionRequestSchema = new mongoose.Schema({
         enum: ["interested", "ignore", "accepted", "rejected"],
     },
 }, { timestamps: true });
-
 const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema);
-
 export default ConnectionRequest;
